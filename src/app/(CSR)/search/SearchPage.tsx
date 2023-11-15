@@ -10,13 +10,12 @@ export default function SearchPage() {
     const [searchResults, setSearchResults] = useState<UnsplashImage[] | null>(null);
     const [searchResultsLoading, setSearchResultsLoading] = useState(false);
     const [searchResultsLoadingIsError, setSearchResultsLoadingIsError] = useState(false);
+    const [query, setQuery] = useState("");
 
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        const formData = new FormData(e.target as HTMLFormElement);
-        const query = formData.get("query")?.toString().trim();
-
-        if (query) {
+        
+        if (query.trim()) {
             try {
                 setSearchResults(null);
                 setSearchResultsLoadingIsError(false);
@@ -47,9 +46,11 @@ export default function SearchPage() {
                     <Form.Control
                         name="query"
                         placeholder="E.g. cats, hotdogs, ..."
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
                     />
                 </Form.Group>
-                <Button type="submit" className="mb-3" disabled={searchResultsLoading}>
+                <Button type="submit" className="mb-3" disabled={searchResultsLoading || !query.trim()}>
                     Search
                 </Button>
             </Form>
